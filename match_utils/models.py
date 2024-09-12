@@ -1,4 +1,3 @@
-import tensorflow
 import torch
 from pytorch_pretrained_biggan import (BigGAN, one_hot_from_names, truncated_noise_sample,
                                        save_as_images, display_in_terminal)
@@ -14,6 +13,7 @@ import timm.models.vision_transformer
 from typing import Text
 import os.path
 
+from multimodal.multimodal_lit import MultiModalLitModel
 
 def load_gan(mode, device = 'cpu', path: Text = '.'):
     if mode == "biggan":
@@ -124,6 +124,12 @@ def load_discr(mode, device='cpu', path: Text = '.'):
     elif mode == "clip":
         discr, _ = clip.load("RN50", device=device, jit = False)
         discr_layers = [ "visual.layer1", "visual.layer2", "visual.layer3", "visual.layer4"]
+        for p in discr.parameters(): 
+            p.data = p.data.float()
+    elif mode == "cvcl":
+        discr, _ = MultiModalLitModel.load_model("cvcl-resnext")
+        discr.to(device)
+        discr_layers = [ "vision_encoder.model.layer1", "vision_encoder.model.layer2", "vision_encoder.model.layer3", "vision_encoder.model.layer4"]
         for p in discr.parameters(): 
             p.data = p.data.float()
     elif mode == "resnet50":

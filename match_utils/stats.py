@@ -43,6 +43,10 @@ def get_mean_std(gan, gan_layers, discr, discr_layers, gan_mode, discr_mode, dat
                 img = torch.nn.functional.interpolate(img, size = (224,224), mode = "bicubic")
                 img = torchvision.transforms.Normalize((0.48145466, 0.4578275, 0.40821073), (0.26862954, 0.26130258, 0.27577711))(img)
                 _ = discr.model.encode_image(img)
+            elif discr_mode == "cvcl":
+                img = torch.nn.functional.interpolate(img, size = (224,224), mode = "bicubic")
+                img = torchvision.transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))(img)
+                _ = discr.encode(img)
             else:
                 img = torch.nn.functional.interpolate(img, size = (224,224), mode = "bicubic")
                 img = torchvision.transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))(img)
