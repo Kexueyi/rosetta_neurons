@@ -73,7 +73,7 @@ def get_layers(gan, gan_layers, discr,discr_layers, gan_mode, discr_mode, device
     #### Forward through discriminator
     with torch.no_grad():
     
-        if discr_mode == "clip":
+        if discr_mode == "clip" or discr_mode == "cvcl":
             _ = discr.model.encode_image(img)
         else:
             _ = discr(img)
